@@ -17,6 +17,7 @@ limitations under the License.
 package source
 
 import (
+	"context"
 	"testing"
 
 	"github.com/pkg/errors"
@@ -64,7 +65,7 @@ func (suite *GatewaySuite) SetupTest() {
 	}
 
 	for _, service := range suite.lbServices {
-		_, err = fakeKubernetesClient.CoreV1().Services(service.Namespace).Create(service)
+		_, err = fakeKubernetesClient.CoreV1().Services(service.Namespace).Create(context.Background(), service, metav1.CreateOptions{})
 		suite.NoError(err, "should succeed")
 	}
 
@@ -1078,14 +1079,14 @@ func testGatewayEndpoints(t *testing.T) {
 
 			for _, lb := range ti.lbServices {
 				service := lb.Service()
-				_, err := fakeKubernetesClient.CoreV1().Services(service.Namespace).Create(service)
+				_, err := fakeKubernetesClient.CoreV1().Services(service.Namespace).Create(context.Background(), service, metav1.CreateOptions{})
 				require.NoError(t, err)
 			}
 
 			fakeIstioClient := NewFakeConfigStore()
 			for _, config := range ti.configItems {
 				gatewayCfg := config.Config()
-				_, err := fakeIstioClient.NetworkingV1alpha3().Gateways(ti.targetNamespace).Create(&gatewayCfg)
+				_, err := fakeIstioClient.NetworkingV1alpha3().Gateways(ti.targetNamespace).Create(context.Background(), &gatewayCfg, metav1.CreateOptions{})
 				require.NoError(t, err)
 			}
 
@@ -1119,7 +1120,7 @@ func newTestGatewaySource(loadBalancerList []fakeIngressGatewayService) (*gatewa
 
 	for _, lb := range loadBalancerList {
 		service := lb.Service()
-		_, err := fakeKubernetesClient.CoreV1().Services(service.Namespace).Create(service)
+		_, err := fakeKubernetesClient.CoreV1().Services(service.Namespace).Create(context.Background(), service, metav1.CreateOptions{})
 		if err != nil {
 			return nil, err
 		}

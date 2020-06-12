@@ -117,7 +117,7 @@ func NewIstioGatewaySource(
 // Endpoints returns endpoint objects for each host-target combination that should be processed.
 // Retrieves all gateway resources in the source's namespace(s).
 func (sc *gatewaySource) Endpoints() ([]*endpoint.Endpoint, error) {
-	gwList, err := sc.istioClient.NetworkingV1alpha3().Gateways(sc.namespace).List(metav1.ListOptions{})
+	gwList, err := sc.istioClient.NetworkingV1alpha3().Gateways(sc.namespace).List(context.Background(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}

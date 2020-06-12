@@ -187,7 +187,7 @@ func (cs *crdSource) List(opts *metav1.ListOptions) (result *endpoint.DNSEndpoin
 		Namespace(cs.namespace).
 		Resource(cs.crdResource).
 		VersionedParams(opts, cs.codec).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }
@@ -200,7 +200,7 @@ func (cs *crdSource) UpdateStatus(dnsEndpoint *endpoint.DNSEndpoint) (result *en
 		Name(dnsEndpoint.Name).
 		SubResource("status").
 		Body(dnsEndpoint).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }

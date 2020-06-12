@@ -287,7 +287,7 @@ func (sc *ingressRouteSource) targetsFromContourLoadBalancer() (targets endpoint
 	if err != nil {
 		return nil, err
 	}
-	if svc, err := sc.kubeClient.CoreV1().Services(lbNamespace).Get(lbName, metav1.GetOptions{}); err != nil {
+	if svc, err := sc.kubeClient.CoreV1().Services(lbNamespace).Get(context.Background(), lbName, metav1.GetOptions{}); err != nil {
 		log.Warn(err)
 	} else {
 		for _, lb := range svc.Status.LoadBalancer.Ingress {

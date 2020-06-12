@@ -17,6 +17,7 @@ limitations under the License.
 package source
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -62,7 +63,7 @@ func (suite *IngressSuite) SetupTest() {
 		hostnames:   []string{"v1"},
 		annotations: map[string]string{ALBDualstackAnnotationKey: ALBDualstackAnnotationValue},
 	}).Ingress()
-	_, err = fakeClient.ExtensionsV1beta1().Ingresses(suite.fooWithTargets.Namespace).Create(suite.fooWithTargets)
+	_, err = fakeClient.ExtensionsV1beta1().Ingresses(suite.fooWithTargets.Namespace).Create(context.Background(), suite.fooWithTargets, metav1.CreateOptions{})
 	suite.NoError(err, "should succeed")
 }
 
@@ -1009,7 +1010,7 @@ func testIngressEndpoints(t *testing.T) {
 				ti.ignoreHostnameAnnotation,
 			)
 			for _, ingress := range ingresses {
-				_, err := fakeClient.ExtensionsV1beta1().Ingresses(ingress.Namespace).Create(ingress)
+				_, err := fakeClient.ExtensionsV1beta1().Ingresses(ingress.Namespace).Create(context.Background(), ingress, metav1.CreateOptions{})
 				require.NoError(t, err)
 			}
 
