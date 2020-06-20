@@ -83,7 +83,7 @@ func (suite *GatewaySuite) SetupTest() {
 }
 
 func (suite *GatewaySuite) TestResourceLabelIsSet() {
-	endpoints, _ := suite.source.Endpoints()
+	endpoints, _ := suite.source.Endpoints(context.Background())
 	for _, ep := range endpoints {
 		suite.Equal("gateway/default/foo-gateway-with-targets", ep.Labels[endpoint.ResourceLabelKey], "should set correct resource label")
 	}
@@ -1101,7 +1101,7 @@ func testGatewayEndpoints(t *testing.T) {
 			)
 			require.NoError(t, err)
 
-			res, err := gatewaySource.Endpoints()
+			res, err := gatewaySource.Endpoints(context.Background())
 			if ti.expectError {
 				assert.Error(t, err)
 			} else {

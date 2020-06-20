@@ -82,7 +82,7 @@ func (suite *ServiceSuite) SetupTest() {
 }
 
 func (suite *ServiceSuite) TestResourceLabelIsSet() {
-	endpoints, _ := suite.sc.Endpoints()
+	endpoints, _ := suite.sc.Endpoints(context.Background())
 	for _, ep := range endpoints {
 		suite.Equal("service/default/foo-with-targets", ep.Labels[endpoint.ResourceLabelKey], "should set correct resource label")
 	}
@@ -1119,7 +1119,7 @@ func testServiceSourceEndpoints(t *testing.T) {
 
 			// wait up to a few seconds for new resources to appear in informer cache.
 			err = poll(time.Second, 3*time.Second, func() (bool, error) {
-				res, err = client.Endpoints()
+				res, err = client.Endpoints(context.Background())
 				if err != nil {
 					// stop waiting if we get an error
 					return true, err
@@ -1286,7 +1286,7 @@ func TestClusterIpServices(t *testing.T) {
 			)
 			require.NoError(t, err)
 
-			endpoints, err := client.Endpoints()
+			endpoints, err := client.Endpoints(context.Background())
 			if tc.expectError {
 				require.Error(t, err)
 			} else {
@@ -1618,7 +1618,7 @@ func TestNodePortServices(t *testing.T) {
 			)
 			require.NoError(t, err)
 
-			endpoints, err := client.Endpoints()
+			endpoints, err := client.Endpoints(context.Background())
 			if tc.expectError {
 				require.Error(t, err)
 			} else {
@@ -1947,7 +1947,7 @@ func TestHeadlessServices(t *testing.T) {
 			)
 			require.NoError(t, err)
 
-			endpoints, err := client.Endpoints()
+			endpoints, err := client.Endpoints(context.Background())
 			if tc.expectError {
 				require.Error(t, err)
 			} else {
@@ -2249,7 +2249,7 @@ func TestHeadlessServicesHostIP(t *testing.T) {
 			)
 			require.NoError(t, err)
 
-			endpoints, err := client.Endpoints()
+			endpoints, err := client.Endpoints(context.Background())
 			if tc.expectError {
 				require.Error(t, err)
 			} else {
@@ -2354,7 +2354,7 @@ func TestExternalServices(t *testing.T) {
 			)
 			require.NoError(t, err)
 
-			endpoints, err := client.Endpoints()
+			endpoints, err := client.Endpoints(context.Background())
 			if tc.expectError {
 				require.Error(t, err)
 			} else {
@@ -2395,7 +2395,7 @@ func BenchmarkServiceEndpoints(b *testing.B) {
 	require.NoError(b, err)
 
 	for i := 0; i < b.N; i++ {
-		_, err := client.Endpoints()
+		_, err := client.Endpoints(context.Background())
 		require.NoError(b, err)
 	}
 }

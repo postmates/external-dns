@@ -90,7 +90,7 @@ func (suite *IngressRouteSuite) SetupTest() {
 }
 
 func (suite *IngressRouteSuite) TestResourceLabelIsSet() {
-	endpoints, _ := suite.source.Endpoints()
+	endpoints, _ := suite.source.Endpoints(context.Background())
 	for _, ep := range endpoints {
 		suite.Equal("ingressroute/default/foo-ingressroute-with-targets", ep.Labels[endpoint.ResourceLabelKey], "should set correct resource label")
 	}
@@ -275,7 +275,7 @@ func testEndpointsFromIngressRoute(t *testing.T) {
 		t.Run(ti.title, func(t *testing.T) {
 			if source, err := newTestIngressRouteSource(ti.loadBalancer); err != nil {
 				require.NoError(t, err)
-			} else if endpoints, err := source.endpointsFromIngressRoute(ti.ingressRoute.IngressRoute()); err != nil {
+			} else if endpoints, err := source.endpointsFromIngressRoute(context.Background(), ti.ingressRoute.IngressRoute()); err != nil {
 				require.NoError(t, err)
 			} else {
 				validateEndpoints(t, endpoints, ti.expected)
@@ -1031,7 +1031,7 @@ func testIngressRouteEndpoints(t *testing.T) {
 			)
 			require.NoError(t, err)
 
-			res, err := ingressRouteSource.Endpoints()
+			res, err := ingressRouteSource.Endpoints(context.Background())
 			if ti.expectError {
 				assert.Error(t, err)
 			} else {

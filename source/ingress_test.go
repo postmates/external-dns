@@ -68,14 +68,14 @@ func (suite *IngressSuite) SetupTest() {
 }
 
 func (suite *IngressSuite) TestResourceLabelIsSet() {
-	endpoints, _ := suite.sc.Endpoints()
+	endpoints, _ := suite.sc.Endpoints(context.Background())
 	for _, ep := range endpoints {
 		suite.Equal("ingress/default/foo-with-targets", ep.Labels[endpoint.ResourceLabelKey], "should set correct resource label")
 	}
 }
 
 func (suite *IngressSuite) TestDualstackLabelIsSet() {
-	endpoints, _ := suite.sc.Endpoints()
+	endpoints, _ := suite.sc.Endpoints(context.Background())
 	for _, ep := range endpoints {
 		suite.Equal("true", ep.Labels[endpoint.DualstackLabelKey], "should set dualstack label to true")
 	}
@@ -1039,7 +1039,7 @@ func testIngressEndpoints(t *testing.T) {
 			require.NoError(t, err)
 
 			// Informer cache has all of the ingresses. Retrieve and validate their endpoints.
-			res, err := source.Endpoints()
+			res, err := source.Endpoints(context.Background())
 			if ti.expectError {
 				require.Error(t, err)
 			} else {
